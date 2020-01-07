@@ -17,7 +17,8 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
   res.status(200).json({
-    "carbon": "9000"
+    "from": "London",
+    "to": "Paris"
   })
 })
 
