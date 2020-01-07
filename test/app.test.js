@@ -8,4 +8,11 @@ describe('Test the root path', () => {
       done();
     });
   });
+  
+  test('It should push back JSON', (done) => {
+    request(app).get('/').then((response) => {
+      expect(response.body).toEqual({"thing": "somethingElse"});
+      done();
+    })
+  })
 });
