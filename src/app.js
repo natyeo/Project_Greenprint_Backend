@@ -15,4 +15,10 @@ app.get('/', (req, res) => {
   })
 });
 
+app.post('/', (req, res) => {
+  rest.status(200).json({
+    "carbon": "9000"
+  })
+})
+
 module.exports = app;
