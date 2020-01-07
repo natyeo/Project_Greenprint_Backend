@@ -16,10 +16,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', (req, res) => {
-  res.status(200).json({
-    "from": "London",
-    "to": "Paris"
-  })
+  res.status(200).json(req.body)
 })
 
 module.exports = app;
