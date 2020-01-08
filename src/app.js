@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 var googleMaps = require('@google/maps').createClient({
-  key: 'AIzaSyBp5iH1Pa9j2upLFHEslrir61_T7eliNNg'
+  key: 
 });
 
 var app = express();
