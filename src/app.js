@@ -18,6 +18,12 @@ app.post('/', (req, res) => {
   res.status(200).json(req.body)
 })
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    "thing": "somethingElse"
+  })
+})
+
 // Test routes
 app.get('/test-route', (req, res) => {
 
@@ -29,7 +35,7 @@ app.get('/test-route', (req, res) => {
     if (!err) {
         var rawDistance = response.json.routes[0].legs[0].distance.text
          res.send("Your journey is " + rawDistance + "les long!");
-         
+
     } else {
       console.log(err);
     }
