@@ -8,8 +8,6 @@
 
 # API docs
 
-Each of these API endpoints are illustrated by a curl command you can use and test with in your terminal. 
-
 API hosted at 
 ```
 http://project-greenprint-backend.herokuapp.com/
@@ -18,10 +16,6 @@ http://project-greenprint-backend.herokuapp.com/
 ## Journey
 
 **POST** ```/```
-
-```bash
-curl http://project-greenprint-backend.herokuapp.com/
-```
 
 Post request has to contain query parameters in the body of the request formatted as JSON. It must be in the following format:
 
