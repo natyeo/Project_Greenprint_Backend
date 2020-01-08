@@ -58,6 +58,20 @@ Clone repository. Once inside the root folder run the following command to insta
 ```bash
 npm install
 ```
+Set up environment. Inside the root folder run the following command, modified to include your own API keys, in order to be able to run locally.
+
+```bash
+touch .env
+```
+and then inside the .env file add:
+
+```
+NODE_ENV=development
+PORT=5678
+
+GOOGLE_KEY='YOUR_GOOGLE_API_KEY'
+CARBON_KEY='YOUR_TRIP_TO_CARBON_API_KEY'
+```
 
 To run server locally, type ``` npm server.js ```.
 
