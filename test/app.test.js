@@ -17,6 +17,8 @@ describe('Test the root path', () => {
   });
 });
 
+// ALL OF THESE TEST NEED TO BE FIXED AND UPDATED
+
 // describe('Test the root post path', () => {
 //   test('It should return JSON for a post request params', (done) => {
 //     request(app).post('/').send({"from": "London", "to": "Paris"}).then((response) => {
