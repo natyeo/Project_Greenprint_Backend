@@ -4,7 +4,8 @@ var path = require('path');
 var logger = require('morgan');
 const { google_key, carbon_key } = require('../config')
 var googleMaps = require('@google/maps').createClient({
-  key: google_key
+  key: google_key,
+  Promise: Promise
 });
 
 var app = express();
@@ -15,26 +16,46 @@ app.use(express.urlencoded({ extended: false }));
 
 // Production routes
 app.post('/', (req, res) => {
-  const googleMapsQuery = {
+  googleMapsQuery = (mode) => {
+    return {
     origin: req.body.from,
     destination: req.body.to,
     units: 'imperial',
-    mode: 'transit'
+    mode: mode
+    };
   }
 
-  googleMaps.directions(googleMapsQuery, function(err, response) {
-    if (!err) {
-      const carbonQuery = {
-        distance: response.json.routes[0].legs[0].distance.text,
-        duration: response.json.routes[0].legs[0].duration.text,
-        mode: response.json.routes[0].legs[0].steps[0].travel_mode,
-        carbonFootprint: ""
+  function googleApiCall(mode) {
+    return new Promise((resolve, reject) => {
+      googleMaps.directions(googleMapsQuery(mode), function(err, response) {
+        if (!err){
+          resolve({
+            distance: response.json.routes[0].legs[0].distance.text,
+            duration: response.json.routes[0].legs[0].duration.text,
+            mode: mode
+          });
+        }
+          reject(err);
+      });
+    });
+  }
+
+  const driving = googleApiCall('driving')
+  const bicycling = googleApiCall('bicycling')
+  const walking = googleApiCall('walking')
+  const transit = googleApiCall('transit')
+
+  Promise.all([driving, bicycling, walking, transit]).then((values) => {
+    const carbonApiCall = values.map(function(type) {
+      return {
+        activity: type.distance,
+        activityType: 'miles',
+        mode: type.mode
       }
-      res.json(carbonQuery);
-    } else {
-      console.log(err);
-    }
-  });
+    })
+    res.json(carbonApiCall);
+  })
+  .catch(err => console.log(err));
 })
 
 app.get('/', (req, res) => {
