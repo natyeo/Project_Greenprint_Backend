@@ -17,18 +17,27 @@ describe('Test the root path', () => {
   });
 });
 
-describe('Test the root post path', () => {
-  test('It should return JSON for a post request params', (done) => {
-    request(app).post('/').send({"from": "London", "to": "Paris"}).then((response) => {
-      expect(response.body).toEqual({"from": "London", "to": "Paris"})
-      done();
-    });
-  });
+// describe('Test the root post path', () => {
+//   test('It should return JSON for a post request params', (done) => {
+//     request(app).post('/').send({"from": "London", "to": "Paris"}).then((response) => {
+//       expect(response.body).toEqual({"from": "London", "to": "Paris"})
+//       done();
+//     });
+//   });
+//
+//   test('It should return correct JSON for a post request params', (done) => {
+//     request(app).post('/').send({"from": "Paris", "to": "Lyon"}).then((response) => {
+//       expect(response.body).not.toEqual({"from": "London", "to": "Paris"})
+//       done();
+//     });
+//   });
+// });
 
-  test('It should return correct JSON for a post request params', (done) => {
-    request(app).post('/').send({"from": "Paris", "to": "Lyon"}).then((response) => {
-      expect(response.body).not.toEqual({"from": "London", "to": "Paris"})
-      done();
-    });
-  });
-});
+// describe('Test the google maps API', () => {
+//   test('It should convert a call to the google API into the right format of JSON', (done) => {
+//     request(app).post('/test-route').send({"from": "London", "to": "Paris"}).then((response) => {
+//       expect(response.body).toEqual({})
+//       done();
+//     });
+//   });
+// });
