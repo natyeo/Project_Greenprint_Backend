@@ -45,19 +45,38 @@ app.get('/', (req, res) => {
 
 // Test routes
 app.post('/test-route', (req, res) => {
-
-  googleMaps.directions({
-    origin: 'London',
-    destination: 'Paris',
-    units: 'imperial'
-  }, function(err, response) {
-    if (!err) {
-      var rawDistance = response.json
-      res.json(response.json.routes.legs);
-    } else {
-      console.log(err);
+  res.status(200).json({ results: [
+    {
+      mode: "walking",
+      travel_time: "3 hours",
+      distance: 8,
+      carbon: 0
+    },
+    {
+      mode: "cycling",
+      travel_time: "1 hour",
+      distance: 8,
+      carbon: 0
+    },
+    {
+      mode: "car",
+      travel_time: "20 minutes",
+      distance: 10,
+      carbon: 2.30
     }
-  });
+  ]})
+  // googleMaps.directions({
+  //   origin: 'London',
+  //   destination: 'Paris',
+  //   units: 'imperial'
+  // }, function(err, response) {
+  //   if (!err) {
+  //     var rawDistance = response.json
+  //     res.json(response.json.routes.legs);
+  //   } else {
+  //     console.log(err);
+  //   }
+  // });
 });
 
 
