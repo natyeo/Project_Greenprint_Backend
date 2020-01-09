@@ -15,14 +15,22 @@ app.use(express.urlencoded({ extended: false }));
 
 // Production routes
 app.post('/', (req, res) => {
-  googleMaps.directions({
-    origin: 'London',
-    destination: 'Paris',
-    units: 'imperial'
-  }, function(err, response) {
+  const googleMapsQuery = {
+    origin: req.body.from,
+    destination: req.body.to,
+    units: 'imperial',
+    mode: 'transit'
+  }
+
+  googleMaps.directions(googleMapsQuery, function(err, response) {
     if (!err) {
-      var rawDistance = response.json
-      res.json(response.json.routes.legs);
+      const carbonQuery = {
+        distance: response.json.routes[0].legs[0].distance.text,
+        duration: response.json.routes[0].legs[0].duration.text,
+        mode: response.json.routes[0].legs[0].steps[0].travel_mode,
+        carbonFootprint: ""
+      }
+      res.json(carbonQuery);
     } else {
       console.log(err);
     }
@@ -64,7 +72,5 @@ app.post('/test-route', (req, res) => {
     }
   ]})
 });
-
-
 
 module.exports = app;
