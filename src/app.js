@@ -16,19 +16,19 @@ app.use(express.urlencoded({ extended: false }));
 // Production routes
 app.post('/', (req, res) => {
   res.status(200).json({ results: [
-    walking: {
+    {
       mode: "walking",
       travel_time: "3 hours",
       distance: 8,
       carbon: 0
     },
-    cycling: {
+    {
       mode: "cycling",
       travel_time: "1 hour",
       distance: 8,
       carbon: 0
     },
-    car: {
+    {
       mode: "car",
       travel_time: "20 minutes",
       distance: 10,
