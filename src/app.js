@@ -46,14 +46,14 @@ app.get('/', (req, res) => {
 // Test routes
 app.post('/test-route', (req, res) => {
 
-  googleMaps.distanceMatrix({
-    origins: 'London',
-    destinations: 'Paris',
+  googleMaps.directions({
+    origin: 'London',
+    destination: 'Paris',
     units: 'imperial'
   }, function(err, response) {
     if (!err) {
       var rawDistance = response.json
-      res.json(response.json);
+      res.json(response.json.routes.legs);
     } else {
       console.log(err);
     }
