@@ -8,7 +8,7 @@
 
 # API docs
 
-API hosted at 
+API hosted at
 ```
 http://project-greenprint-backend.herokuapp.com/
 ```
@@ -48,7 +48,7 @@ API tested with the following frameworks:
   * [Jest](https://jestjs.io/)
   * [Supertest](https://github.com/visionmedia/supertest)
 
-  
+
 ### Setup
 
 API runs with version ```13.5.0``` of Node JS. Check node [documentation](https://nodejs.org/en/download/) for installation instructions.
