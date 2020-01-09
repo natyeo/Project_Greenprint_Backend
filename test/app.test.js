@@ -33,11 +33,11 @@ describe('Test the root path', () => {
 //   });
 // });
 
-describe('Test the google maps API', () => {
-  test('It should convert a call to the google API into the right format of JSON', (done) => {
-    request(app).post('/test-route').send({"from": "London", "to": "Paris"}).then((response) => {
-      expect(response.body).toEqual({})
-      done();
-    });
-  });
-});
+// describe('Test the google maps API', () => {
+//   test('It should convert a call to the google API into the right format of JSON', (done) => {
+//     request(app).post('/test-route').send({"from": "London", "to": "Paris"}).then((response) => {
+//       expect(response.body).toEqual({})
+//       done();
+//     });
+//   });
+// });
