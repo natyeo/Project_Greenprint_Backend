@@ -73,7 +73,7 @@ GOOGLE_KEY='YOUR_GOOGLE_API_KEY'
 CARBON_KEY='YOUR_TRIP_TO_CARBON_API_KEY'
 ```
 
-To run server locally, type ``` npm server.js ```.
+To run server locally, type ``` node server.js ```.
 
 Application will run on ```localhost:5678```
 
