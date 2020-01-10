@@ -71,6 +71,7 @@ app.post('/test-route', (req, res) => {
   ]})
 });
 
+app.use('/user', userRouter)
 
 
 module.exports = app;
