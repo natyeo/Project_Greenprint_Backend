@@ -7,6 +7,7 @@ var googleMaps = require('@google/maps').createClient({
   key: google_key,
   Promise: Promise
 });
+const fetch = require('node-fetch');
 
 var app = express();
 
@@ -14,47 +15,55 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+function googleMapsQuery(req, mode) {
+  return {
+  origin: req.body.from,
+  destination: req.body.to,
+  units: 'imperial',
+  mode: mode
+  };
+}
+
+function googleApiCall(req, mode) {
+  return new Promise((resolve, reject) => {
+    googleMaps.directions(googleMapsQuery(req, mode), function(err, response) {
+      if (!err){
+        resolve({
+          distance: response.json.routes[0].legs[0].distance.text,
+          travel_time: response.json.routes[0].legs[0].duration.text,
+          mode: mode,
+          carbon: ""
+        });
+      }
+        reject(err);
+    });
+  });
+}
+//
+// function carbonApiCall(distance, mode) {
+//     const Url=`https://api.triptocarbon.xyz/v1/footprint?activity=${distance}&activityType=miles&country=gbr&mode=${mode}`
+//     fetch(Url)
+//   }
+
 // Production routes
 app.post('/', (req, res) => {
-  googleMapsQuery = (mode) => {
-    return {
-    origin: req.body.from,
-    destination: req.body.to,
-    units: 'imperial',
-    mode: mode
-    };
-  }
+  const driving = googleApiCall(req, 'driving')
+  const bicycling = googleApiCall(req, 'bicycling')
+  const walking = googleApiCall(req, 'walking')
+  const transit = googleApiCall(req, 'transit')
 
-  function googleApiCall(mode) {
-    return new Promise((resolve, reject) => {
-      googleMaps.directions(googleMapsQuery(mode), function(err, response) {
-        if (!err){
-          resolve({
-            distance: response.json.routes[0].legs[0].distance.text,
-            duration: response.json.routes[0].legs[0].duration.text,
-            mode: mode
-          });
-        }
-          reject(err);
-      });
-    });
-  }
-
-  const driving = googleApiCall('driving')
-  const bicycling = googleApiCall('bicycling')
-  const walking = googleApiCall('walking')
-  const transit = googleApiCall('transit')
-
-  Promise.all([driving, bicycling, walking, transit]).then((values) => {
-    const carbonApiCall = values.map(function(type) {
-      return {
-        activity: type.distance,
-        activityType: 'miles',
-        mode: type.mode
-      }
+  Promise.all([driving, transit]).then((values) => {
+    const results = values;
+    let drivingDistance = results[0].distance.slice(0, -3);
+    let carMode = "anyCar";
+    let transitDistance = results[1].distance.slice(0, -3);
+    let transitMode = "transitRail"
+    const Url=`https://api.triptocarbon.xyz/v1/footprint?activity=${drivingDistance}&activityType=miles&country=gbr&mode=${carMode}`
+    fetch(Url)
+    .then(values => res.json(values))
+    .catch(err=> console.log(err))
     })
-    res.json(carbonApiCall);
-  })
+    // carbonApiCall(transitDistance, transitMode).then(res=> {console.log(res)});
   .catch(err => console.log(err));
 })
 
