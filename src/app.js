@@ -8,7 +8,7 @@ var googleMaps = require('@google/maps').createClient({
 });
 
 const db = require('../db')
-const userRouter = require('./routes/user-router')
+const userRouter = require('../routes/user-router')
 
 
 var app = express();
