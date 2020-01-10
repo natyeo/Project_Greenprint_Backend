@@ -32,18 +32,36 @@ function googleApiCall(req, mode) {
           distance: response.json.routes[0].legs[0].distance.text,
           travel_time: response.json.routes[0].legs[0].duration.text,
           mode: mode,
-          carbon: ""
+          carbon: 0
         });
       }
         reject(err);
     });
   });
 }
-//
-// function carbonApiCall(distance, mode) {
-//     const Url=`https://api.triptocarbon.xyz/v1/footprint?activity=${distance}&activityType=miles&country=gbr&mode=${mode}`
-//     fetch(Url)
-//   }
+
+async function carbonApiCall(url) {
+  let promise = new Promise((res, rej) => {
+    fetch(url, {
+        method: 'GET'
+      })
+      .then(function (response) {
+        return response
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
+      .then(function (data) {
+        return data.json()
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
+  })
+    let result = await promise;
+    return result
+  }
+
 
 // Production routes
 app.post('/', (req, res) => {
@@ -52,17 +70,20 @@ app.post('/', (req, res) => {
   const walking = googleApiCall(req, 'walking')
   const transit = googleApiCall(req, 'transit')
 
-  Promise.all([driving, transit]).then((values) => {
+  Promise.all([driving, transit, walking, bicycling]).then((values) => {
     const results = values;
     let drivingDistance = results[0].distance.slice(0, -3);
-    let carMode = "anyCar";
     let transitDistance = results[1].distance.slice(0, -3);
-    let transitMode = "transitRail"
-    const Url=`https://api.triptocarbon.xyz/v1/footprint?activity=${drivingDistance}&activityType=miles&country=gbr&mode=${carMode}`
-    fetch(Url)
-    .then(values => res.json(values))
-    .catch(err=> console.log(err))
-    })
+    let carUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${drivingDistance}&activityType=miles&country=gbr&mode=anyCar&appTkn=${carbon_key}`
+    let transitUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${transitDistance}&activityType=miles&country=gbr&mode=transitRail&appTkn=${carbon_key}`
+    const carCarbon = carbonApiCall(carUrl)
+    // const transitCarbon = carbonApiCall(transitUrl)
+    console.log(carCarbon)
+  })
+  .then(function(args) {
+    console.log(args)
+    Promise.resolve(arg)
+  })
     // carbonApiCall(transitDistance, transitMode).then(res=> {console.log(res)});
   .catch(err => console.log(err));
 })
