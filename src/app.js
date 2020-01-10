@@ -39,25 +39,25 @@ app.get('/', (req, res) => {
 app.post('/test-route', (req, res) => {
   res.status(200).json({ results: [
     {
+      mode: "bicyling",
+      travel_time: "1 hour",
+      distance: 8,
+      carbon: 0
+    },
+    {
+      mode: "driving",
+      travel_time: "20 minutes",
+      distance: 10,
+      carbon: 2.30
+    },
+    {
       mode: "walking",
       travel_time: "3 hours",
       distance: 8,
       carbon: 0
     },
     {
-      mode: "cycling",
-      travel_time: "1 hour",
-      distance: 8,
-      carbon: 0
-    },
-    {
-      mode: "car",
-      travel_time: "20 minutes",
-      distance: 10,
-      carbon: 2.30
-    },
-    {
-      mode: "public transport",
+      mode: "transit",
       travel_time: "10 minutes",
       distance: 2,
       carbon: 0.5
