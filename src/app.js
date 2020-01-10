@@ -7,7 +7,7 @@ var googleMaps = require('@google/maps').createClient({
   key: google_key
 });
 
-const db = require('./db')
+const db = require('../db')
 
 var app = express();
 
