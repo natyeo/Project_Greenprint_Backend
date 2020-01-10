@@ -1,7 +1,8 @@
-const mongoose = require('mongoose')
+const {mongo_atlas_key} = require('../config')
 
+const mongoose = require('mongoose')
 mongoose
-    .connect('mongodb://127.0.0.1:27017/user', { useNewUrlParser: true })
+    .connect(mongo_atlas_key, { useNewUrlParser: true })
     .catch(e => {
         console.error('Connection error', e.message)
     })
