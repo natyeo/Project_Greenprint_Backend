@@ -87,7 +87,7 @@ brew install mongodb
 Nice! The next step is creating our database.
 
 ```
-$ mongo
+mongo
 > use user
 ```
 
