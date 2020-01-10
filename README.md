@@ -78,6 +78,19 @@ To run server locally, type ``` node server.js ```.
 
 Application will run on ```localhost:5678```
 
+###  Installing MongoDB
+
+To run the backend database, you need to install MongoDB. For this, just type on your terminal:
+```
+brew install mongodb
+```
+Nice! The next step is creating our database.
+
+```
+$ mongo
+> use user
+```
+
 ### Testing
 
 To run tests, navigate to root folder and run command
