@@ -15,6 +15,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+db.on('error', console.error.bind(console, 'MongoDB connection error:'))
+
 // Production routes
 app.post('/', (req, res) => {
   googleMaps.directions({
