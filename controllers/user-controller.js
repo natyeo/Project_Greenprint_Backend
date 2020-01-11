@@ -41,7 +41,7 @@ const { errors, isValid } = validateRegisterInput(req.body);
 
 };
 
-registerUser = (req, res) => {
+loginUser = (req, res) => {
   // Form validation
 const { errors, isValid } = validateLoginInput(req.body);
 
@@ -92,3 +92,8 @@ User.findOne({ email }).then(user => {
     });
 
 };
+
+module.exports = {
+    registerUser,
+    loginUser
+}
