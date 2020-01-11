@@ -7,16 +7,21 @@ var googleMaps = require('@google/maps').createClient({
   key: google_key
 });
 
-
 const db = require('../db')
 const recordRouter = require('../routes/record-router')
 
+const passport = require("passport");
+const recordRouter = require('../routes/user-router')
 
 var app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// Passport middleware
+app.use(passport.initialize());
+// Passport config
+require("../config/passport")(passport);
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
@@ -73,6 +78,7 @@ app.post('/test-route', (req, res) => {
 });
 
 app.use('/travel', recordRouter)
+app.use('/travel', userRouter)
 
 
 module.exports = app;
