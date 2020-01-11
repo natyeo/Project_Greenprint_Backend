@@ -42,6 +42,7 @@ getRecordById = async (req, res) => {
 }
 
 
+
 getRecords = async (req, res) => {
     await Record.find({}, (err, records) => {
         if (err) {
