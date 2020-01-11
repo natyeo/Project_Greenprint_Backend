@@ -7,7 +7,7 @@ const { secretOrKey } = require('../config')
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 
-createUser = (req, res) => {
+registerUser = (req, res) => {
   // Form validation
 const { errors, isValid } = validateRegisterInput(req.body);
 
@@ -38,5 +38,11 @@ const { errors, isValid } = validateRegisterInput(req.body);
     });
   }
 });
+
+};
+
+registerUser = (req, res) => {
+  // Form validation
+const { errors, isValid } = validateLoginInput(req.body);
 
 };
