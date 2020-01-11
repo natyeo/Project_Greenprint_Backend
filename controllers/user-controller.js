@@ -69,6 +69,26 @@ User.findOne({ email }).then(user => {
         name: user.name
       };
 
-
+  // Sign token
+          jwt.sign(
+            payload,
+            keys.secretOrKey,
+            {
+              expiresIn: 31556926 // 1 year in seconds
+            },
+            (err, token) => {
+              res.json({
+                success: true,
+                token: "Bearer " + token
+              });
+            }
+          );
+        } else {
+          return res
+            .status(400)
+            .json({ passwordincorrect: "Password incorrect" });
+        }
+      });
+    });
 
 };
