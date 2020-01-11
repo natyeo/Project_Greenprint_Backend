@@ -20,6 +20,7 @@ const { errors, isValid } = validateRegisterInput(req.body);
       if (user) {
         return res.status(400).json({ email: "Email already exists" });
       } else {
+        console.log(req.body)
         const newUser = new User({
           name: req.body.name,
           email: req.body.email,
