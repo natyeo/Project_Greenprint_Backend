@@ -9,7 +9,7 @@ var googleMaps = require('@google/maps').createClient({
 
 
 const db = require('../db')
-const userRouter = require('../routes/user-router')
+const recordRouter = require('../routes/record-router')
 
 
 var app = express();
@@ -72,7 +72,7 @@ app.post('/test-route', (req, res) => {
   ]})
 });
 
-app.use('/user', userRouter)
+app.use('/travel', recordRouter)
 
 
 module.exports = app;
