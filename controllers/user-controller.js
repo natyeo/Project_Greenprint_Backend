@@ -11,4 +11,10 @@ createUser = (req, res) => {
   // Form validation
 const { errors, isValid } = validateRegisterInput(req.body);
 
+// Check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+
 };
