@@ -15,15 +15,6 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// function googleMapsQuery(req, mode) {
-//   return {
-//   origin: req.body.from,
-//   destination: req.body.to,
-//   units: 'imperial',
-//   mode: mode
-//   };
-// }
-
 async function googleApiCall(req, mode) {
   const googleMapsQuery = await {
     origin: req.body.from,
@@ -47,29 +38,6 @@ async function googleApiCall(req, mode) {
   });
 }
 
-// async function carbonApiCall(url) {
-//   let promise = new Promise((res, rej) => {
-//     fetch(url, {
-//         method: 'GET'
-//       })
-//       .then(function (response) {
-//         return response
-//       })
-//       .catch(function (err) {
-//         console.log(err)
-//       })
-//       .then(function (data) {
-//         return data.json()
-//       })
-//       .catch(function (err) {
-//         console.log(err)
-//       })
-//   })
-//     let result = await promise;
-//     return result
-//   }
-
-
 // Production routes
 app.post('/', (req, res) => {
   const driving = googleApiCall(req, 'driving')
@@ -79,24 +47,35 @@ app.post('/', (req, res) => {
 
   Promise.all([driving, transit, walking, bicycling]).then((values) => {
     const results = values;
-    results[0].carbon = 0.7
-    results[1].carbon = 0.3
-    res.json(results);
-    // let drivingDistance = results[0].distance.slice(0, -3);
-    // let transitDistance = results[1].distance.slice(0, -3);
-    // let carUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${drivingDistance}&activityType=miles&country=gbr&mode=anyCar&appTkn=${carbon_key}`
-    // let transitUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${transitDistance}&activityType=miles&country=gbr&mode=transitRail&appTkn=${carbon_key}`
-    // const carCarbon = carbonApiCall(carUrl)
-    // // const transitCarbon = carbonApiCall(transitUrl)
-    // console.log(carCarbon)
+    const drivingDistance = values[0].distance.slice(0, -3);
+    const transitDistance = values[1].distance.slice(0, -3);
+    const carUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${drivingDistance}&activityType=miles&country=gbr&mode=anyCar&appTkn=${carbon_key}`
+    const transitUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${transitDistance}&activityType=miles&country=gbr&mode=transitRail&appTkn=${carbon_key}`
+
+    returnFinalResponse(results, carUrl, transitUrl, res)
   })
-  // .then(function(args) {
-  //   console.log(args)
-  //   Promise.resolve(arg)
-  // })
-    // carbonApiCall(transitDistance, transitMode).then(res=> {console.log(res)});
   .catch(err => console.log(err));
 })
+
+async function returnFinalResponse(results, carUrl, transitUrl, res) {
+  try {
+    var [response1, response2] = await Promise.all([
+      fetch(carUrl),
+      fetch(transitUrl)
+    ])
+    var [data1, data2] = await Promise.all([
+      response1.json(),
+      response2.json()
+    ])
+    results[0].carbon = data1.carbonFootprint;
+    results[1].carbon = data2.carbonFootprint;
+
+    res.json(results)
+
+  } catch(err) {
+    console.log(err)
+    }
+}
 
 app.get('/', (req, res) => {
   res.status(200).json({
