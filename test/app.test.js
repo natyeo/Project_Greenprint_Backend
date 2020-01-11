@@ -1,5 +1,7 @@
 const request = require('supertest');
 const app = require('../src/app');
+var googleMapsQuery = require('../src/app')
+
 
 describe('Test the root path', () => {
   test('It should response the GET method', (done) => {
@@ -16,3 +18,10 @@ describe('Test the root path', () => {
     });
   });
 });
+
+describe('googleMapsQuery function', () => {
+  test('it returns an object with the request', () => {
+    req = { 'from': 'Kings Cross', 'to': 'Aldgate' }
+    expect(googleMapsQuery(req, 'driving').toEqual({origin: 'Kings Cross', destination: 'Aldgate', units: 'imperial', mode: 'driving'}))
+  })
+})
