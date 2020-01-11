@@ -72,7 +72,7 @@ User.findOne({ email }).then(user => {
 // Sign token
         jwt.sign(
           payload,
-          keys.secretOrKey,
+          secretOrKey,
           {
             expiresIn: 31556926 // 1 year in seconds
           },
