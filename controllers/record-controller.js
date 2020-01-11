@@ -1,62 +1,63 @@
-const User = require('../models/user-model')
+const Record = require('../models/record-model')
 
-createTravel = (req, res) => {
+createRecord = (req, res) => {
     const body = req.body
 
-    const user = new User(body)
+    const record = new Record(body)
 
-    if (!user) {
+    if (!record) {
         return res.status(400).json({ success: false, error: err })
     }
 
-    user
+    record
         .save()
         .then(() => {
             return res.status(201).json({
                 success: true,
-                id: user._id,
-                message: 'Route imported!',
+                id: record._id,
+                message: 'Record imported!',
             })
         })
         .catch(error => {
             return res.status(400).json({
                 error,
-                message: 'Route not imported!',
+                message: 'Record not imported!',
             })
         })
 }
 
-getTravelById = async (req, res) => {
-    await User.findOne({ _id: req.params.id }, (err, user) => {
+getRecordById = async (req, res) => {
+    await Record.findOne({ _id: req.params.id }, (err, record) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
 
-        if (!user) {
+        if (!record) {
             return res
                 .status(404)
                 .json({ success: false, error: `Travel record not found` })
         }
-        return res.status(200).json({ success: true, data: user })
+        return res.status(200).json({ success: true, data: record })
     }).catch(err => console.log(err))
 }
 
 
-getTravels = async (req, res) => {
-    await User.find({}, (err, users) => {
+getRecords = async (req, res) => {
+    await Record.find({}, (err, records) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
-        if (!users.length) {
+        if (!records.length) {
             return res
                 .status(404)
-                .json({ success: false, error: `History routes not found` })
+                .json({ success: false, error: `History record not found` })
         }
-        return res.status(200).json({ success: true, data: users })
+        return res.status(200).json({ success: true, data: records })
     }).catch(err => console.log(err))
 }
 
 module.exports = {
-    createTravel,
-    getTravels,
+    createRecord,
+    getRecords,
+    getRecordById
 }
