@@ -11,7 +11,7 @@ const db = require('../db')
 const recordRouter = require('../routes/record-router')
 
 const passport = require("passport");
-const recordRouter = require('../routes/user-router')
+const userRouter = require('../routes/user-router')
 
 var app = express();
 
