@@ -5,7 +5,14 @@ var logger = require('morgan');
 const { google_key, carbon_key } = require('../config')
 var googleMaps = require('@google/maps').createClient({
   key: google_key
+
 });
+
+var mongoose = require('mongoose');
+
+mongoose.connect("mongodb://localhost/travels");
+require("./models/record-model")
+require("./models/user-model")
 
 const db = require('../db')
 const recordRouter = require('../routes/record-router')

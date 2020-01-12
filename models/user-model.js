@@ -18,7 +18,7 @@ const User = new Schema({
     type: Date,
     default: Date.now
   },
-  journey: {type: Schema.Types.ObjectId, ref: 'record'}
+  journey: {type: mongoose.Types.ObjectId, ref: 'record'}
 });
 
 module.exports = mongoose.model(User, 'journey');
