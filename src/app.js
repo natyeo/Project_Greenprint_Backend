@@ -47,10 +47,20 @@ app.post('/', (req, res) => {
 
   Promise.all([driving, transit, walking, bicycling]).then((values) => {
     const results = values;
-    const drivingDistance = values[0].distance.slice(0, -3);
-    const transitDistance = values[1].distance.slice(0, -3);
-    const carUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${drivingDistance}&activityType=miles&country=gbr&mode=anyCar&appTkn=${carbon_key}`
-    const transitUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${transitDistance}&activityType=miles&country=gbr&mode=transitRail&appTkn=${carbon_key}`
+    let drivingDistance
+    let transitDistance
+    
+    results.filter(function(item){
+      item.mode == 'driving' ? drivingDistance = item.distance.slice(0, -3) : drivingDistance;
+      item.mode == 'transit' ? transitDistance = item.distance.slice(0, -3) : transitDistance;
+    })
+
+    results.forEach(function(item, i){
+      item.distance = item.distance.slice(0, -3)
+    })
+
+    const carUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${drivingDistance}&activityType=miles&country=def&mode=anyCar&appTkn=${carbon_key}`
+    const transitUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${transitDistance}&activityType=miles&country=def&mode=transitRail&appTkn=${carbon_key}`
 
     returnFinalResponse(results, carUrl, transitUrl, res)
   })
@@ -59,16 +69,19 @@ app.post('/', (req, res) => {
 
 async function returnFinalResponse(results, carUrl, transitUrl, res) {
   try {
-    var [response1, response2] = await Promise.all([
+    var [responseCar, responseTransit] = await Promise.all([
       fetch(carUrl),
       fetch(transitUrl)
     ])
-    var [data1, data2] = await Promise.all([
-      response1.json(),
-      response2.json()
+    var [dataCar, dataTransit] = await Promise.all([
+      responseCar.json(),
+      responseTransit.json()
     ])
-    results[0].carbon = data1.carbonFootprint;
-    results[1].carbon = data2.carbonFootprint;
+
+    results.filter(function(item){
+      item.mode == 'driving' ? item.carbon = dataCar.carbonFootprint : item.carbon;
+      item.mode == 'transit' ? item.carbon = dataTransit.carbonFootprint : item.carbon;
+    })
 
     res.json(results)
 
@@ -93,19 +106,19 @@ app.post('/test-route', (req, res) => {
       carbon: 0
     },
     {
-      mode: "cycling",
+      mode: "bicycling",
       travel_time: "1 hour",
       distance: 8,
       carbon: 0
     },
     {
-      mode: "car",
+      mode: "driving",
       travel_time: "20 minutes",
       distance: 10,
       carbon: 2.30
     },
     {
-      mode: "public transport",
+      mode: "transit",
       travel_time: "10 minutes",
       distance: 2,
       carbon: 0.5
