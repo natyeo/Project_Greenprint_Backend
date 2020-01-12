@@ -5,7 +5,7 @@ const Record = new Schema({
   model: { type: String, required: true },
   distance: { type: Number, required: true },
   carbon: { type: Number, required: true },
-  profile: [{type: Schema.Types.ObjectID, ref: 'User'}]
+  profile: [{type: Schema.Types.ObjectId, ref: 'user'}]
 });
 
-module.exports = mongoose.model("record", Record);
+module.exports = mongoose.model(Record, 'profile')
