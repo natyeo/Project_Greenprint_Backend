@@ -71,6 +71,7 @@ User.findOne({ email }).then(user => {
       };
 
 // Sign token
+    console.log(res)
         jwt.sign(
           payload,
           secretOrKey,
