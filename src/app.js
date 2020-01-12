@@ -33,7 +33,7 @@ async function googleApiCall(req, mode) {
           carbon: 0
         });
       }
-        reject(err);
+      reject(err);
     });
   });
 }
@@ -49,7 +49,7 @@ app.post('/', (req, res) => {
     const results = values;
     let drivingDistance
     let transitDistance
-    
+
     results.filter(function(item){
       item.mode == 'driving' ? drivingDistance = item.distance.slice(0, -3) : drivingDistance;
       item.mode == 'transit' ? transitDistance = item.distance.slice(0, -3) : transitDistance;
@@ -87,7 +87,7 @@ async function returnFinalResponse(results, carUrl, transitUrl, res) {
 
   } catch(err) {
     console.log(err)
-    }
+  }
 }
 
 app.get('/', (req, res) => {
