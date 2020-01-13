@@ -2,7 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
-const { google_key, carbon_key } = require('../config')
+const { google_key, carbon_key, mapper_key } = require('../config')
 var googleMaps = require('@google/maps').createClient({
   key: google_key,
   Promise: Promise
@@ -38,49 +38,91 @@ async function googleApiCall(req, mode) {
   });
 }
 
+// change to ASYNC function when adding API, i.e.: async function flightApiCall() {
+async function flightApiCall() {
+  // fetch("https://greatcirclemapper.p.rapidapi.com/airports/route/EGLL-KJFK/510", {
+  //   "method": "GET",
+  //   "headers": {
+  //     "x-rapidapi-host": "greatcirclemapper.p.rapidapi.com",
+  //     "x-rapidapi-key": mapper_key,
+  //     "vary": "Accept-Encoding",
+  //     "content-type": "text/html;charset=UTF-8"
+  //   }
+  // })
+  // .then(response => {
+  //   console.log(response);
+  //   return response
+  // })
+  // .catch(err => {
+  //   console.log(err);
+  // });
+
+  return new Promise((resolve, reject) => {
+    resolve({
+      distance: "1000 mi",
+      travel_time: 0,
+      mode: 'flying',
+      carbon: 0
+    });
+  });
+
+}
+
 // Production routes
 app.post('/', (req, res) => {
   const driving = googleApiCall(req, 'driving')
   const transit = googleApiCall(req, 'transit')
   const bicycling = googleApiCall(req, 'bicycling')
   const walking = googleApiCall(req, 'walking')
+  const flying = flightApiCall()
 
-  Promise.all([driving, transit, walking, bicycling]).then((values) => {
+  Promise.all([driving, transit, walking, bicycling, flying]).then((values) => {
     const results = values;
     let drivingDistance
     let transitDistance
+    let flightDistance 
     
-    results.filter(function(item){
-      item.mode == 'driving' ? drivingDistance = item.distance.slice(0, -3) : drivingDistance;
-      item.mode == 'transit' ? transitDistance = item.distance.slice(0, -3) : transitDistance;
-    })
+    results.filter(function(item) {
+      item.distance = item.distance.slice(0, -3);
 
-    results.forEach(function(item, i){
-      item.distance = item.distance.slice(0, -3)
+      if (item.mode == 'driving') {
+        drivingDistance = item.distance; 
+      }
+      else if (item.mode == 'transit') {
+        transitDistance = item.distance; 
+      }
+      else if (item.mode == 'flying') {
+        flightDistance = item.distance; 
+      }
     })
 
     const carUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${drivingDistance}&activityType=miles&country=def&mode=anyCar&appTkn=${carbon_key}`
     const transitUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${transitDistance}&activityType=miles&country=def&mode=transitRail&appTkn=${carbon_key}`
+    const flightUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${flightDistance}&activityType=miles&country=def&mode=anyFlight&appTkn=${carbon_key}`
 
-    returnFinalResponse(results, carUrl, transitUrl, res)
+    returnFinalResponse(results, carUrl, transitUrl, flightUrl, res)
+
   })
   .catch(err => console.log(err));
 })
 
-async function returnFinalResponse(results, carUrl, transitUrl, res) {
+async function returnFinalResponse(results, carUrl, transitUrl, flightUrl, res) {
   try {
-    var [responseCar, responseTransit] = await Promise.all([
+    var [responseCar, responseTransit, responseFlight] = await Promise.all([
       fetch(carUrl),
-      fetch(transitUrl)
+      fetch(transitUrl),
+      fetch(flightUrl)
     ])
-    var [dataCar, dataTransit] = await Promise.all([
+    var [dataCar, dataTransit, dataFlight] = await Promise.all([
       responseCar.json(),
-      responseTransit.json()
+      responseTransit.json(), 
+      responseFlight.json()
     ])
 
     results.filter(function(item){
       item.mode == 'driving' ? item.carbon = dataCar.carbonFootprint : item.carbon;
       item.mode == 'transit' ? item.carbon = dataTransit.carbonFootprint : item.carbon;
+      item.mode == 'flying' ? item.carbon = dataFlight.carbonFootprint : item.carbon;
     })
 
     res.json(results)
