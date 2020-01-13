@@ -51,18 +51,6 @@ async function googleApiCall(req, mode) {
 
 // change to ASYNC function when adding API, i.e.: async function flightApiCall() {
 async function flightApiCall(req) {
-  // const flightsQuery = await {
-  //   segments[0][origin]: req.body.from,
-  //   segments[0][destination]: req.body.to,
-  //   cabin_class: 'economy'
-  // };
-
-  // var query = {
-  //   "cabin_class": 'economy',
-  //   "segments" = [{origin:BCN, destination:ARN}],
-  //   "currencies": ["USD"]
-  // }
-
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
   myHeaders.append("Authorization", climateneutral_key );
@@ -73,11 +61,10 @@ async function flightApiCall(req) {
     redirect: 'follow'
   };
   
-  fetch("https://api.goclimateneutral.org/v1/flight_footprint?segments[0][origin]=LIN&segments[0][destination]=BCN&currencies[]=USD&cabin_class=economy", requestOptions)
+  const carbonFlight = await fetch(`https://api.goclimateneutral.org/v1/flight_footprint?segments[0][origin]=${req.body.from}&segments[0][destination]=${req.body.to}&currencies[]=USD&cabin_class=economy`, requestOptions)
     .then(response => response.json())
     .then(result => {
-      console.log(result.footprint)
-      return result
+      return result.footprint
     })
     .catch(error => console.log('error', error));
 
@@ -86,7 +73,7 @@ async function flightApiCall(req) {
         distance: "Not available   ",
         travel_time: "Not available",
         mode: 'flying',
-        carbon: 1000
+        carbon: carbonFlight
       });
     });
 
@@ -105,16 +92,16 @@ app.post('/', (req, res) => {
     let drivingDistance
     let transitDistance
     
-    results.filter(function(item) {
-      item.distance = item.distance.slice(0, -3);
+    // results.filter(function(item) {
+    //   item.distance = item.distance.slice(0, -3);
 
-      if (item.mode == 'driving') {
-        drivingDistance = item.distance; 
-      }
-      else if (item.mode == 'transit') {
-        transitDistance = item.distance; 
-      }
-    })
+    //   if (item.mode == 'driving') {
+    //     drivingDistance = item.distance; 
+    //   }
+    //   else if (item.mode == 'transit') {
+    //     transitDistance = item.distance; 
+    //   }
+    // })
 
     const carUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${drivingDistance}&activityType=miles&country=def&mode=anyCar&appTkn=${carbon_key}`
     const transitUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${transitDistance}&activityType=miles&country=def&mode=transitRail&appTkn=${carbon_key}`
@@ -139,11 +126,11 @@ async function returnFinalResponse(results, carUrl, transitUrl, res) {
       // responseFlight.json()
     ])
 
-    results.filter(function(item){
-      item.mode == 'driving' ? item.carbon = dataCar.carbonFootprint : item.carbon;
-      item.mode == 'transit' ? item.carbon = dataTransit.carbonFootprint : item.carbon;
-      // item.mode == 'flying' ? item.carbon = dataFlight.carbonFootprint : item.carbon;
-    })
+    // results.filter(function(item){
+    //   item.mode == 'driving' ? item.carbon = dataCar.carbonFootprint : item.carbon;
+    //   item.mode == 'transit' ? item.carbon = dataTransit.carbonFootprint : item.carbon;
+    //   // item.mode == 'flying' ? item.carbon = dataFlight.carbonFootprint : item.carbon;
+    // })
 
     res.json(results)
 
