@@ -80,7 +80,7 @@ app.post('/test-route', (req, res) => {
 });
 
 app.use('/travel', recordRouter)
-app.use('/travel', userRouter)
+app.use('/user', userRouter)
 
 
 module.exports = app;

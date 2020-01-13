@@ -7,6 +7,7 @@ const router = express.Router()
 router.post('/record', RecordController.createRecord)
 router.get('/records', RecordController.getRecords)
 router.get('/record/:id', RecordController.getRecordById)
+// router.get('/record/:user', RecordController.getRecordByUser)
 
 
 module.exports = router
