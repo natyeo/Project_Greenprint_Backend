@@ -1,6 +1,5 @@
 const request = require('supertest');
 const app = require('../src/app');
-var googleMapsQuery = require('../src/app')
 
 
 describe('Test the root path', () => {

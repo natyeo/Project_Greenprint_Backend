@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { google_key, carbon_key } = require('../config')
+const { google_key, carbon_key } = require('../../config')
 var googleMaps = require('@google/maps').createClient({
   key: google_key,
   Promise: Promise
