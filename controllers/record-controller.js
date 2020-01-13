@@ -57,8 +57,27 @@ getRecords = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+
+getRecordByUser = async (req, res) => {
+  console.log(req.params)
+    await Record.find({ user: req.params.user_id }, (err, record) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+
+        if (!record) {
+            return res
+                .status(404)
+                .json({ success: false, error: `Travel record not found for this user` })
+        }
+        return res.status(200).json({ success: true, data: record })
+    }).catch(err => console.log(err))
+
+  }
+
 module.exports = {
     createRecord,
     getRecords,
-    getRecordById
+    getRecordById,
+    getRecordByUser
 }
