@@ -8,6 +8,7 @@ var googleMaps = require('@google/maps').createClient({
   Promise: Promise
 });
 const fetch = require('node-fetch');
+global.Headers = fetch.Headers;
 
 var app = express();
 
@@ -24,54 +25,70 @@ async function googleApiCall(req, mode) {
   };
 
   return new Promise((resolve, reject) => {
-    googleMaps.directions(googleMapsQuery, function(err, response) {
-      if (!err){
-        resolve({
-          distance: response.json.routes[0].legs[0].distance.text,
-          travel_time: response.json.routes[0].legs[0].duration.text,
-          mode: mode,
-          carbon: 0
-        });
-      }
-        reject(err);
-    });
+    // googleMaps.directions(googleMapsQuery, function(err, response) {
+    //   if (!err){
+    //     resolve({
+    //       distance: response.json.routes[0].legs[0].distance.text,
+    //       travel_time: response.json.routes[0].legs[0].duration.text,
+    //       mode: mode,
+    //       carbon: 0
+    //     });
+    //   }
+    //     reject(err);
+    // });
+
+    // DELETE CODE BELOW AND UNCOMMENT CODE ABOVE
+
+
+    resolve({
+            distance: "test",
+            travel_time: "test",
+            mode: mode,
+            carbon: 0
+          });
   });
 }
 
 // change to ASYNC function when adding API, i.e.: async function flightApiCall() {
 async function flightApiCall(req) {
-  const flightsQuery = await {
-    segments[0][origin]: req.body.from,
-    segments[0][destination]: req.body.to,
-    cabin_class: 'economy'
+  // const flightsQuery = await {
+  //   segments[0][origin]: req.body.from,
+  //   segments[0][destination]: req.body.to,
+  //   cabin_class: 'economy'
+  // };
+
+  // var query = {
+  //   "cabin_class": 'economy',
+  //   "segments" = [{origin:BCN, destination:ARN}],
+  //   "currencies": ["USD"]
+  // }
+
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+  myHeaders.append("Authorization", climateneutral_key );
+  
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
   };
+  
+  fetch("https://api.goclimateneutral.org/v1/flight_footprint?segments[0][origin]=LIN&segments[0][destination]=BCN&currencies[]=USD&cabin_class=economy", requestOptions)
+    .then(response => response.json())
+    .then(result => {
+      console.log(result.footprint)
+      return result
+    })
+    .catch(error => console.log('error', error));
 
-  var flightUrl = 'https://api.goclimateneutral.org/v1/flight_footprint'
-  // fetch("https://greatcirclemapper.p.rapidapi.com/airports/route/EGLL-KJFK/510", {
-  //   "method": "GET",
-  //   "headers": {
-  //     "x-rapidapi-host": "greatcirclemapper.p.rapidapi.com",
-  //     "x-rapidapi-key": mapper_key,
-  //     "vary": "Accept-Encoding",
-  //     "content-type": "text/html;charset=UTF-8"
-  //   }
-  // })
-  // .then(response => {
-  //   console.log(response);
-  //   return response
-  // })
-  // .catch(err => {
-  //   console.log(err);
-  // });
-
-  return new Promise((resolve, reject) => {
-    resolve({
-      distance: "Not available   ",
-      travel_time: "Not available",
-      mode: 'flying',
-      carbon: 0
+    return new Promise((resolve, reject) => {
+      resolve({
+        distance: "Not available   ",
+        travel_time: "Not available",
+        mode: 'flying',
+        carbon: 1000
+      });
     });
-  });
 
 }
 
@@ -83,11 +100,10 @@ app.post('/', (req, res) => {
   const walking = googleApiCall(req, 'walking')
   const flying = flightApiCall(req)
 
-  Promise.all([driving, transit, walking, bicycling]).then((values) => {
+  Promise.all([driving, transit, walking, bicycling, flying]).then((values) => {
     const results = values;
     let drivingDistance
     let transitDistance
-    // let flightDistance 
     
     results.filter(function(item) {
       item.distance = item.distance.slice(0, -3);
@@ -98,9 +114,6 @@ app.post('/', (req, res) => {
       else if (item.mode == 'transit') {
         transitDistance = item.distance; 
       }
-      // else if (item.mode == 'flying') {
-      //   flightDistance = item.distance; 
-      // }
     })
 
     const carUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${drivingDistance}&activityType=miles&country=def&mode=anyCar&appTkn=${carbon_key}`
@@ -115,12 +128,12 @@ app.post('/', (req, res) => {
 
 async function returnFinalResponse(results, carUrl, transitUrl, res) {
   try {
-    var [responseCar, responseTransit, responseFlight] = await Promise.all([
+    var [responseCar, responseTransit] = await Promise.all([
       fetch(carUrl),
       fetch(transitUrl)
       // fetch(flightUrl)
     ])
-    var [dataCar, dataTransit, dataFlight] = await Promise.all([
+    var [dataCar, dataTransit] = await Promise.all([
       responseCar.json(),
       responseTransit.json()
       // responseFlight.json()
