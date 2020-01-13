@@ -13,13 +13,19 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "jest": "^24.9.0",
+    "jest-fetch-mock": "^3.0.1",
     "superagent": "^5.2.1",
     "supertest": "^4.0.2"
+  },
+  "jest": {
+    "automock": false,
+    "setupFiles": ["./setupjest.js"]
   }
 }
