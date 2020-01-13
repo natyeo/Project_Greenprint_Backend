@@ -13,6 +13,7 @@
     "is-empty": "^1.2.0",
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.5.1",
+    "mocha": "^7.0.0",
     "mongoose": "^5.8.6",
     "morgan": "~1.9.1",
     "passport": "^0.4.1",
@@ -26,10 +27,7 @@
     "superagent": "^5.2.1",
     "supertest": "^4.0.2"
   },
-  "jest": {
-    "automock": false,
-    "setupFiles": [
-      "./setupjest.js"
-    ]
+  "scripts": {
+    "test": "mocha"
   }
 }
