@@ -15,7 +15,6 @@ const recordRouter = require('../routes/record-router')
 const passport = require("passport");
 const userRouter = require('../routes/user-router')
 
-const { google_key, carbon_key } = require('../config');
 const Api = require('./services/apiCalls');
 var app = express();
 
