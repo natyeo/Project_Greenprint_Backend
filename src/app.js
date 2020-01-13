@@ -2,7 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
-const { google_key, carbon_key, mapper_key } = require('../config')
+const { google_key, carbon_key, climateneutral_key } = require('../config')
 var googleMaps = require('@google/maps').createClient({
   key: google_key,
   Promise: Promise
@@ -39,7 +39,14 @@ async function googleApiCall(req, mode) {
 }
 
 // change to ASYNC function when adding API, i.e.: async function flightApiCall() {
-async function flightApiCall() {
+async function flightApiCall(req) {
+  const flightsQuery = await {
+    segments[0][origin]: req.body.from,
+    segments[0][destination]: req.body.to,
+    cabin_class: 'economy'
+  };
+
+  var flightUrl = 'https://api.goclimateneutral.org/v1/flight_footprint'
   // fetch("https://greatcirclemapper.p.rapidapi.com/airports/route/EGLL-KJFK/510", {
   //   "method": "GET",
   //   "headers": {
@@ -59,8 +66,8 @@ async function flightApiCall() {
 
   return new Promise((resolve, reject) => {
     resolve({
-      distance: "1000 mi",
-      travel_time: 0,
+      distance: "Not available   ",
+      travel_time: "Not available",
       mode: 'flying',
       carbon: 0
     });
@@ -74,13 +81,13 @@ app.post('/', (req, res) => {
   const transit = googleApiCall(req, 'transit')
   const bicycling = googleApiCall(req, 'bicycling')
   const walking = googleApiCall(req, 'walking')
-  const flying = flightApiCall()
+  const flying = flightApiCall(req)
 
-  Promise.all([driving, transit, walking, bicycling, flying]).then((values) => {
+  Promise.all([driving, transit, walking, bicycling]).then((values) => {
     const results = values;
     let drivingDistance
     let transitDistance
-    let flightDistance 
+    // let flightDistance 
     
     results.filter(function(item) {
       item.distance = item.distance.slice(0, -3);
@@ -91,38 +98,38 @@ app.post('/', (req, res) => {
       else if (item.mode == 'transit') {
         transitDistance = item.distance; 
       }
-      else if (item.mode == 'flying') {
-        flightDistance = item.distance; 
-      }
+      // else if (item.mode == 'flying') {
+      //   flightDistance = item.distance; 
+      // }
     })
 
     const carUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${drivingDistance}&activityType=miles&country=def&mode=anyCar&appTkn=${carbon_key}`
     const transitUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${transitDistance}&activityType=miles&country=def&mode=transitRail&appTkn=${carbon_key}`
-    const flightUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${flightDistance}&activityType=miles&country=def&mode=anyFlight&appTkn=${carbon_key}`
+    // const flightUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${flightDistance}&activityType=miles&country=def&mode=anyFlight&appTkn=${carbon_key}`
 
-    returnFinalResponse(results, carUrl, transitUrl, flightUrl, res)
+    returnFinalResponse(results, carUrl, transitUrl, res)
 
   })
   .catch(err => console.log(err));
 })
 
-async function returnFinalResponse(results, carUrl, transitUrl, flightUrl, res) {
+async function returnFinalResponse(results, carUrl, transitUrl, res) {
   try {
     var [responseCar, responseTransit, responseFlight] = await Promise.all([
       fetch(carUrl),
-      fetch(transitUrl),
-      fetch(flightUrl)
+      fetch(transitUrl)
+      // fetch(flightUrl)
     ])
     var [dataCar, dataTransit, dataFlight] = await Promise.all([
       responseCar.json(),
-      responseTransit.json(), 
-      responseFlight.json()
+      responseTransit.json()
+      // responseFlight.json()
     ])
 
     results.filter(function(item){
       item.mode == 'driving' ? item.carbon = dataCar.carbonFootprint : item.carbon;
       item.mode == 'transit' ? item.carbon = dataTransit.carbonFootprint : item.carbon;
-      item.mode == 'flying' ? item.carbon = dataFlight.carbonFootprint : item.carbon;
+      // item.mode == 'flying' ? item.carbon = dataFlight.carbonFootprint : item.carbon;
     })
 
     res.json(results)
@@ -131,6 +138,8 @@ async function returnFinalResponse(results, carUrl, transitUrl, flightUrl, res) 
     console.log(err)
     }
 }
+
+// http://impact.brighterplanet.com/flights?destination_airport=paris&origin_airport=milan
 
 app.get('/', (req, res) => {
   res.status(200).json({
