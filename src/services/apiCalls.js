@@ -15,7 +15,7 @@ async function googleApiCall(req, mode) {
 
   return new Promise((resolve, reject) => {
     googleMaps.directions(googleMapsQuery, function(err, response) {
-      if (!err){
+      if (response.json.status == "OK"){
         resolve({
           distance: response.json.routes[0].legs[0].distance.text,
           travel_time: response.json.routes[0].legs[0].duration.text,
@@ -23,7 +23,7 @@ async function googleApiCall(req, mode) {
           carbon: 0
         });
       }
-        reject(err);
+      reject(new Error("Bad Google Maps Request"));
     });
   });
 }
@@ -48,7 +48,7 @@ async function returnFinalResponse(results, carUrl, transitUrl, res) {
 
   } catch(err) {
     console.log(err)
-    }
+  }
 }
 
 exports.googleApiCall = googleApiCall;

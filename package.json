@@ -26,6 +26,8 @@
   },
   "jest": {
     "automock": false,
-    "setupFiles": ["./setupjest.js"]
+    "setupFiles": [
+      "./setupjest.js"
+    ]
   }
 }
