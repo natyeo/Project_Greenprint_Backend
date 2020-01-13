@@ -17,3 +17,12 @@ describe('Test the root path', () => {
     });
   });
 });
+
+describe('Error testing', () => {
+  test('400 error bad request', (done) => {
+    request(app).post('/').send({ from: "London", to: "Sydney" }).then((response) => {
+      expect(response.body).toEqual({"error": "Bad Request", "description": "Have you considered entering more specific locations?"})
+      done();
+    })
+  })
+})

@@ -36,7 +36,13 @@ app.post('/', (req, res) => {
 
     Api.returnFinalResponse(results, carUrl, transitUrl, res)
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+    console.log(err)
+    return res.status(400).send({
+      error: "Bad Request",
+      description: "Have you considered entering more specific locations?"
+    })
+  });
 })
 
 
