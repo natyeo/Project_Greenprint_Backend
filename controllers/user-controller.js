@@ -80,8 +80,9 @@ User.findOne({ email }).then(user => {
           (err, token) => {
             res.json({
               success: true,
-              token: "Bearer " + token
+              token: token
             });
+              console.log(res)
           }
         );
       } else {
