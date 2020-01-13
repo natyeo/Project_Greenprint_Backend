@@ -1,5 +1,5 @@
 const Record = require('../models/record-model')
-
+const User = require('../models/user-model')
 createRecord = (req, res) => {
     const body = req.body
 
