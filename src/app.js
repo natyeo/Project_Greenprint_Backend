@@ -8,7 +8,6 @@ var googleMaps = require('@google/maps').createClient({
 
 });
 
-
 const db = require('../db')
 const recordRouter = require('../routes/record-router')
 
