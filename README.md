@@ -71,11 +71,25 @@ PORT=5678
 
 GOOGLE_KEY='YOUR_GOOGLE_API_KEY'
 CARBON_KEY='YOUR_TRIP_TO_CARBON_API_KEY'
+MONGO_ATLAS_KEY = 'YOUR_MONGOATLAST_USER_PASSWORD'
 ```
 
 To run server locally, type ``` node server.js ```.
 
 Application will run on ```localhost:5678```
+
+###  Installing MongoDB
+
+To run the backend database, you need to install MongoDB. For this, just type on your terminal:
+```
+brew install mongodb
+```
+Nice! The next step is creating our database.
+
+```
+mongo
+> use user
+```
 
 ### Testing
 

@@ -4,49 +4,38 @@ var path = require('path');
 var logger = require('morgan');
 const { google_key, carbon_key, climateneutral_key } = require('../config')
 var googleMaps = require('@google/maps').createClient({
-  key: google_key,
-  Promise: Promise
+  key: google_key
+
 });
 const fetch = require('node-fetch');
 global.Headers = fetch.Headers;
 
+const db = require('../db')
+const recordRouter = require('../routes/record-router')
+
+const passport = require("passport");
+const userRouter = require('../routes/user-router')
+
+const Api = require('./services/apiCalls');
 var app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// Passport middleware
+app.use(passport.initialize());
+// Passport config
+require("../config/passport")(passport);
 
-async function googleApiCall(req, mode) {
-  const googleMapsQuery = await {
-    origin: req.body.from,
-    destination: req.body.to,
-    units: 'imperial',
-    mode: mode
-  };
-
-  return new Promise((resolve, reject) => {
-    // googleMaps.directions(googleMapsQuery, function(err, response) {
-    //   if (!err){
-    //     resolve({
-    //       distance: response.json.routes[0].legs[0].distance.text,
-    //       travel_time: response.json.routes[0].legs[0].duration.text,
-    //       mode: mode,
-    //       carbon: 0
-    //     });
-    //   }
-    //     reject(err);
-    // });
-
-    // DELETE CODE BELOW AND UNCOMMENT CODE ABOVE
-
-
-    resolve({
-            distance: "test",
-            travel_time: "test",
-            mode: mode,
-            carbon: 0
-          });
-  });
+db.on('error', console.error.bind(console, 'MongoDB connection error:'))
+if(process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (req.header('x-forwarded-proto') !== 'https') {
+      res.redirect(`https://${req.header('host')}${req.url}`)
+    } else {
+      next()
+    }
+  })
 }
 
 // change to ASYNC function when adding API, i.e.: async function flightApiCall() {
@@ -81,19 +70,20 @@ async function flightApiCall(req) {
 
 // Production routes
 app.post('/', (req, res) => {
-  const driving = googleApiCall(req, 'driving')
-  const transit = googleApiCall(req, 'transit')
-  const bicycling = googleApiCall(req, 'bicycling')
-  const walking = googleApiCall(req, 'walking')
-  const flying = flightApiCall(req)
+  const driving = Api.googleApiCall(req, 'driving')
+  const transit = Api.googleApiCall(req, 'transit')
+  const bicycling = Api.googleApiCall(req, 'bicycling')
+  const walking = Api.googleApiCall(req, 'walking')
 
   Promise.all([driving, transit, walking, bicycling, flying]).then((values) => {
     const results = values;
     let drivingDistance
     let transitDistance
-    
-    // results.filter(function(item) {
-    //   item.distance = item.distance.slice(0, -3);
+
+    results.filter(function(item){
+      item.mode == 'driving' ? drivingDistance = item.distance.slice(0, -3) : drivingDistance;
+      item.mode == 'transit' ? transitDistance = item.distance.slice(0, -3) : transitDistance;
+    })
 
     //   if (item.mode == 'driving') {
     //     drivingDistance = item.distance; 
@@ -107,37 +97,17 @@ app.post('/', (req, res) => {
     const transitUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${transitDistance}&activityType=miles&country=def&mode=transitRail&appTkn=${carbon_key}`
     // const flightUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${flightDistance}&activityType=miles&country=def&mode=anyFlight&appTkn=${carbon_key}`
 
-    returnFinalResponse(results, carUrl, transitUrl, res)
-
+    Api.returnFinalResponse(results, carUrl, transitUrl, res)
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+    console.log(err)
+    return res.status(400).send({
+      error: "Bad Request",
+      description: "Have you considered entering more specific locations?"
+    })
+  });
 })
 
-async function returnFinalResponse(results, carUrl, transitUrl, res) {
-  try {
-    var [responseCar, responseTransit] = await Promise.all([
-      fetch(carUrl),
-      fetch(transitUrl)
-      // fetch(flightUrl)
-    ])
-    var [dataCar, dataTransit] = await Promise.all([
-      responseCar.json(),
-      responseTransit.json()
-      // responseFlight.json()
-    ])
-
-    // results.filter(function(item){
-    //   item.mode == 'driving' ? item.carbon = dataCar.carbonFootprint : item.carbon;
-    //   item.mode == 'transit' ? item.carbon = dataTransit.carbonFootprint : item.carbon;
-    //   // item.mode == 'flying' ? item.carbon = dataFlight.carbonFootprint : item.carbon;
-    // })
-
-    res.json(results)
-
-  } catch(err) {
-    console.log(err)
-    }
-}
 
 // http://impact.brighterplanet.com/flights?destination_airport=paris&origin_airport=milan
 
@@ -151,6 +121,12 @@ app.get('/', (req, res) => {
 app.post('/test-route', (req, res) => {
   res.status(200).json({ results: [
     {
+      mode: "walking",
+      travel_time: "3 hours",
+      distance: 8,
+      carbon: 0
+    },
+    {
       mode: "bicycling",
       travel_time: "1 hour",
       distance: 8,
@@ -163,12 +139,6 @@ app.post('/test-route', (req, res) => {
       carbon: 2.30
     },
     {
-      mode: "walking",
-      travel_time: "3 hours",
-      distance: 8,
-      carbon: 0
-    },
-    {
       mode: "transit",
       travel_time: "10 minutes",
       distance: 2,
@@ -176,5 +146,9 @@ app.post('/test-route', (req, res) => {
     }
   ]})
 });
+
+app.use('/travel', recordRouter)
+app.use('/user', userRouter)
+
 
 module.exports = app;
