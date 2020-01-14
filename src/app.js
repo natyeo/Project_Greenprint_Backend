@@ -71,13 +71,6 @@ app.post('/', (req, res) => {
   });
 })
 
-
-app.get('/', (req, res) => {
-  res.status(200).json({
-    "thing": "somethingElse"
-  })
-})
-
 // Test routes
 app.post('/test-route', (req, res) => {
   res.status(200).json({ results: [
