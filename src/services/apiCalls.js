@@ -45,7 +45,7 @@ async function returnFinalResponse(results, carUrl, transitUrl, res) {
       item.mode == 'driving' ? item.carbon = dataCar.carbonFootprint : item.carbon;
       item.mode == 'transit' ? item.carbon = dataTransit.carbonFootprint : item.carbon;
     })
-    console.log(results)
+
     res.json(results)
 
   } catch(err) {
