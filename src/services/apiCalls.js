@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { google_key, carbon_key } = require('../../config')
+const { google_key, carbon_key, google_key_embed_maps } = require('../../config')
 var googleMaps = require('@google/maps').createClient({
   key: google_key,
   Promise: Promise
@@ -15,12 +15,14 @@ async function googleApiCall(req, mode) {
 
   return new Promise((resolve, reject) => {
     googleMaps.directions(googleMapsQuery, function(err, response) {
+      var generatedUrl = `https://www.google.com/maps/embed/v1/directions?key=${google_key_embed_maps}&origin=${googleMapsQuery.origin}&destination=${googleMapsQuery.destination}&mode=${mode}`
       if (response.json.status == "OK"){
         resolve({
           distance: response.json.routes[0].legs[0].distance.text,
           travel_time: response.json.routes[0].legs[0].duration.text,
           mode: mode,
-          carbon: 0
+          carbon: 0,
+          url: encodeURIComponent(generatedUrl)
         });
       }
       reject(new Error("Bad Google Maps Request"));
@@ -43,7 +45,7 @@ async function returnFinalResponse(results, carUrl, transitUrl, res) {
       item.mode == 'driving' ? item.carbon = dataCar.carbonFootprint : item.carbon;
       item.mode == 'transit' ? item.carbon = dataTransit.carbonFootprint : item.carbon;
     })
-
+    console.log(results)
     res.json(results)
 
   } catch(err) {
