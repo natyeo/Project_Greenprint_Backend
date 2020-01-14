@@ -2,13 +2,30 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
-const { google_key, carbon_key } = require('../config');
+const { google_key, carbon_key } = require('../config')
+var googleMaps = require('@google/maps').createClient({
+  key: google_key
+
+});
+
+const db = require('../db')
+const recordRouter = require('../routes/record-router')
+
+const passport = require("passport");
+const userRouter = require('../routes/user-router')
+
 const Api = require('./services/apiCalls');
 var app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// Passport middleware
+app.use(passport.initialize());
+// Passport config
+require("../config/passport")(passport);
+
+db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 if(process.env.NODE_ENV === 'production') {
   app.use((req, res, next) => {
     if (req.header('x-forwarded-proto') !== 'https') {
@@ -90,5 +107,9 @@ app.post('/test-route', (req, res) => {
     }
   ]})
 });
+
+app.use('/travel', recordRouter)
+app.use('/user', userRouter)
+
 
 module.exports = app;

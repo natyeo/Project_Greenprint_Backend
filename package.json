@@ -2,32 +2,33 @@
   "name": "project-greenprint-backend",
   "version": "0.0.0",
   "private": true,
-  "scripts": {
-    "test": "jest"
-  },
   "dependencies": {
     "@google/maps": "^1.0.2",
+    "bcryptjs": "^2.4.3",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "is-empty": "^1.2.0",
     "jade": "~1.11.0",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^7.0.0",
+    "mongoose": "^5.8.6",
     "morgan": "~1.9.1",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "validator": "^12.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "jest": "^24.9.0",
     "jest-fetch-mock": "^3.0.1",
     "superagent": "^5.2.1",
     "supertest": "^4.0.2"
   },
-  "jest": {
-    "automock": false,
-    "setupFiles": [
-      "./setupjest.js"
-    ]
+  "scripts": {
+    "test": "mocha"
   }
 }
