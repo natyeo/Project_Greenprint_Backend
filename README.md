@@ -72,6 +72,7 @@ PORT=5678
 GOOGLE_KEY='YOUR_GOOGLE_API_KEY'
 CARBON_KEY='YOUR_TRIP_TO_CARBON_API_KEY'
 MONGO_ATLAS_KEY = 'YOUR_MONGOATLAST_USER_PASSWORD'
+GOOGLE_KEY_EMBED_MAPS="A_SEPARATE_GOOGLE_API_KEY_FOR_EMBEDDED_MAPS"
 ```
 
 To run server locally, type ``` node server.js ```.
@@ -98,3 +99,4 @@ To run tests, navigate to root folder and run command
 ```bash
 npm test
 ```
+Tests are run using the Mocha testing framework!
