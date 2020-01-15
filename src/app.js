@@ -71,6 +71,21 @@ if(process.env.NODE_ENV === 'production') {
     });
   })
 
+  app.post('/flights', (req, res) => {
+    const flight = Api.brighterPlanetApiCall(req)
+    flight.then(function(data) {
+      const results = {
+        mode: "flying",
+        origin: data.characteristics.origin_airport.object.airport.name,
+        destination: data.characteristics.destination_airport.object.airport.name,
+        distance: (data.decisions.distance_class.object.flight_distance_class.distance / 1.609344).toFixed(0),
+        carbon: (data.decisions.carbon.object.value).toFixed(2),
+        barrels_of_oil: (data.equivalents.barrels_of_petroleum).toFixed(2)
+      }
+      res.json(results)
+    })
+  })
+
   // Test routes
   app.post('/test-route', (req, res) => {
     res.status(200).json([
@@ -107,7 +122,8 @@ if(process.env.NODE_ENV === 'production') {
       origin: "Sydney Bankstown",
       destination: "London City",
       distance: 6482,
-      carbon: 10000
+      carbon: 10000,
+      barrels_of_oil: 34.6142
     })
   });
 
