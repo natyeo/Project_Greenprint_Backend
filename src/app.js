@@ -1,21 +1,22 @@
 var createError = require('http-errors');
 var express = require('express');
+var cors = require('cors');
 var path = require('path');
 var logger = require('morgan');
-const { google_key, carbon_key } = require('../config')
 var googleMaps = require('@google/maps').createClient({
   key: google_key
 
 });
+var app = express();
 
+const { google_key, carbon_key } = require('../config')
 const db = require('../db')
 const recordRouter = require('../routes/record-router')
-
 const passport = require("passport");
 const userRouter = require('../routes/user-router')
-
 const Api = require('./services/apiCalls');
-var app = express();
+
+app.use(cors({ origin: '*' }));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -35,6 +36,8 @@ if(process.env.NODE_ENV === 'production') {
     }
   })
 }
+
+app.options('*', cors())
 
 // Production routes
 app.post('/', (req, res) => {
