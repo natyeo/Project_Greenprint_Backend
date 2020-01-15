@@ -3,13 +3,13 @@ var express = require('express');
 var cors = require('cors');
 var path = require('path');
 var logger = require('morgan');
+const { google_key, carbon_key } = require('../config')
 var googleMaps = require('@google/maps').createClient({
   key: google_key
 
 });
 var app = express();
 
-const { google_key, carbon_key } = require('../config')
 const db = require('../db')
 const recordRouter = require('../routes/record-router')
 const passport = require("passport");
