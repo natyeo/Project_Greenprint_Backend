@@ -76,32 +76,32 @@ app.post('/', (req, res) => {
 
 // Test routes
 app.post('/test-route', (req, res) => {
-  res.status(200).json({ results: [
+  res.status(200).json([
     {
       mode: "walking",
       travel_time: "3 hours",
-      distance: 8,
+      distance: 42,
       carbon: 0
     },
     {
       mode: "bicycling",
       travel_time: "1 hour",
-      distance: 8,
+      distance: 42,
       carbon: 0
     },
     {
       mode: "driving",
       travel_time: "20 minutes",
-      distance: 10,
+      distance: 42,
       carbon: 2.30
     },
     {
       mode: "transit",
       travel_time: "10 minutes",
-      distance: 2,
+      distance: 42,
       carbon: 0.5
     }
-  ]})
+  ])
 });
 
 app.use('/travel', recordRouter)
