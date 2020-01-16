@@ -95,7 +95,7 @@ if(process.env.NODE_ENV === 'production') {
         mode: "walking",
         travel_time: "3 hours",
         distance: 8,
-        carbon: 0, 
+        carbon: 0,
         url: "www.google.com"
       },
       {

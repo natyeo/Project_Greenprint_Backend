@@ -24,9 +24,14 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "jest-fetch-mock": "^3.0.1",
     "superagent": "^5.2.1",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "@types/chai": "^4.1.7",
+    "@types/chai-http": "^3.0.5",
+    "@types/mocha": "^5.2.6"
   },
   "scripts": {
     "test": "mocha"
