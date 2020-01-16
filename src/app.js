@@ -18,7 +18,7 @@ const passport = require("passport");
 const userRouter = require('../routes/user-router')
 const Api = require('./services/apiCalls');
 const whiteList = [
-  'http://localhost:3000', 
+  'http://localhost:3000',
   'https://project-greenprint-frontend.herokuapp.com/'
 ];
 
@@ -30,6 +30,7 @@ app.use(passport.initialize());
 require("../config/passport")(passport);
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
+
 if(process.env.NODE_ENV === 'production') {
   app.use((req, res, next) => {
     if (req.header('x-forwarded-proto') !== 'https') {

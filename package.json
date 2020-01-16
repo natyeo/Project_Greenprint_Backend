@@ -20,16 +20,22 @@
     "node-fetch": "^2.6.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
+    "promise": "^8.0.3",
     "validator": "^12.1.0"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/chai-http": "^3.0.5",
+    "@types/mocha": "^5.2.6",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "jest-fetch-mock": "^3.0.1",
     "superagent": "^5.2.1",
     "supertest": "^4.0.2"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --exit"
   }
 }
