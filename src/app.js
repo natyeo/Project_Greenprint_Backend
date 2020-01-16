@@ -30,6 +30,7 @@ app.use(passport.initialize());
 require("../config/passport")(passport);
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
+
 if(process.env.NODE_ENV === 'production') {
   app.use((req, res, next) => {
     if (req.header('x-forwarded-proto') !== 'https') {
