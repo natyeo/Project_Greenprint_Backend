@@ -36,7 +36,7 @@ describe('flights route post requests', () => {
     .catch(function(err) {
       throw err;
     })
-  })
+  });
 
   it('should return the right fields', () => {
     chai.request(app)
@@ -54,5 +54,5 @@ describe('flights route post requests', () => {
       expect(res).to.include({"carbon": "1957.02"})
       expect(res).to.include({"barrels_of_oil": "4.55"})
     })
-  })
+  });
 });
