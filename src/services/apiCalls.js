@@ -72,8 +72,9 @@ async function returnFinalResponse(results, carUrl, transitUrl, res) {
     ])
 
     results.filter(function(item){
-      item.mode == 'driving' ? item.carbon = dataCar.carbonFootprint : item.carbon;
-      item.mode == 'transit' ? item.carbon = dataTransit.carbonFootprint : item.carbon;
+      console.log(dataTransit)
+      item.mode == 'driving' && !dataCar.errorMessage ? item.carbon = dataCar.carbonFootprint : item.carbon;
+      item.mode == 'transit' && !dataTransit.errorMessage ? item.carbon = dataTransit.carbonFootprint : item.carbon;
     })
 
     res.json(results)
