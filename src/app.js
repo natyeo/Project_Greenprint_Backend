@@ -38,12 +38,12 @@ if(process.env.NODE_ENV === 'production') {
 
   // Production routes
   app.post('/', (req, res) => {
-    const driving = Api.googleApiCall(req, 'driving')
     const transit = Api.googleApiCall(req, 'transit')
+    const driving = Api.googleApiCall(req, 'driving')
     const bicycling = Api.googleApiCall(req, 'bicycling')
     const walking = Api.googleApiCall(req, 'walking')
 
-    Promise.all([driving, transit, walking, bicycling]).then((values) => {
+    Promise.all([transit, driving, bicycling, walking]).then((values) => {
       const results = values;
       let drivingDistance
       let transitDistance
@@ -93,25 +93,29 @@ if(process.env.NODE_ENV === 'production') {
         mode: "walking",
         travel_time: "3 hours",
         distance: 8,
-        carbon: 0
+        carbon: 0,
+        url: "https://www.google.com/maps/"
       },
       {
         mode: "bicycling",
-        travel_time: "1 hour",
-        distance: 8,
-        carbon: 0
+        travel_time: "NOT AVAILABLE",
+        distance: "NOT AVAILABLE",
+        carbon: "NOT AVAILABLE",
+        url: "https://www.google.com/maps/"
       },
       {
         mode: "driving",
         travel_time: "20 minutes",
         distance: 10,
-        carbon: 2.30
+        carbon: 2.30,
+        url: "https://www.google.com/maps/"
       },
       {
         mode: "transit",
         travel_time: "10 minutes",
         distance: 2,
-        carbon: 0.5
+        carbon: 0.5,
+        url: "https://www.google.com/maps/"
       }
     ])
   });

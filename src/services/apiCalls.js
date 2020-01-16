@@ -13,7 +13,7 @@ async function googleApiCall(req, mode) {
       units: 'imperial',
       mode: mode
     };
-  
+
     return new Promise((resolve, reject) => {
       googleMaps.directions(googleMapsQuery, function(err, response) {
         var generatedUrl = `https://www.google.com/maps/embed/v1/directions?key=${google_key_embed_maps}&origin=${googleMapsQuery.origin}&destination=${googleMapsQuery.destination}&mode=${mode}`
@@ -27,11 +27,11 @@ async function googleApiCall(req, mode) {
           });
         }
         else if (response.json.status == "ZERO_RESULTS") resolve({
-          distance: "NOT AVAILABLE   ",
-          travel_time: "NOT AVAILABLE",
+          distance: "Not available   ",
+          travel_time: "Not available",
           mode: mode,
-          carbon: "NOT AVAILABLE",
-          url: "NOT AVAILABLE"
+          carbon: "Not available",
+          url: encodeURIComponent(generatedUrl)
         });
         else {
           throw new Error("Bad Google Maps Request")
@@ -56,7 +56,6 @@ async function brighterPlanetApiCall(req) {
       resolve(json)
     })
   });
-
   return result;
 };
 
