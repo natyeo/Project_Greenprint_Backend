@@ -47,7 +47,7 @@ describe('post route requests', () => {
       "to": "Paris"
     })
     .then((res) => {
-      expect(res).to.include({ "distance": "293", "travel_time": "5 hours 47 mins", "mode": "driving", "carbon": "121.59", "url": "https%3A%2F%2Fwww.google.com%2Fmaps%2Fembed%2Fv1%2Fdirections%3Fkey%3Dundefined%26origin%3DLondon%26destination%3DParis%26mode%3Ddriving" });
+      expect(res).to.include({ "distance": "293", "travel_time": "5 hours 47 mins", "mode": "driving", "carbon": "121.59", "url": "https%3A%2F%2Fwww.google.com%2Fmaps%2Fembed%2Fv1%2Fdirections%3Fkey%AIzaSyA4KOWe1DeRtM-CMj_qwfqrJAHHUChQnTQ%26origin%3DLondon%26destination%3DParis%26mode%3Ddriving" });
     })
     .catch((err) => {
       throw err;
