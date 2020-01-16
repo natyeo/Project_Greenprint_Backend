@@ -17,12 +17,8 @@ const recordRouter = require('../routes/record-router')
 const passport = require("passport");
 const userRouter = require('../routes/user-router')
 const Api = require('./services/apiCalls');
-const whiteList = [
-  'http://localhost:3000',
-  'https://project-greenprint-frontend.herokuapp.com/'
-];
 
-app.use(cors({ origin: whiteList }));
+app.use(cors({ origin: '*' }));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
