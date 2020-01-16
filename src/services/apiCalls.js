@@ -41,7 +41,7 @@ async function brighterPlanetApiCall(req) {
   const origin = req.body.from;
 
   let result = await new Promise((resolve, reject) => {
-    fetch(`http://impact.brighterplanet.com/flights.json?destination_airport=${destination}&origin_airport=${origin}&seat_class=economy&load_factor=1&key=${brighter_planet_key}`, {
+    fetch(`http://impact.brighterplanet.com/flights.json?destination_airport=${destination}&origin_airport=${origin}&seat_class=economy&trips=1&load_factor=1&key=${brighter_planet_key}`, {
       method: 'post'
     })
     .then(data => data.json())
