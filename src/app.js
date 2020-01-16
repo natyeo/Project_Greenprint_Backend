@@ -3,7 +3,7 @@ var express = require('express');
 var cors = require('cors');
 var path = require('path');
 var logger = require('morgan');
-const { google_key, carbon_key, climateneutral_key } = require('../config')
+const { google_key, carbon_key } = require('../config')
 var googleMaps = require('@google/maps').createClient({
   key: google_key
 
@@ -45,7 +45,7 @@ app.post('/', (req, res) => {
   const bicycling = Api.googleApiCall(req, 'bicycling')
   const walking = Api.googleApiCall(req, 'walking')
 
-  Promise.all([driving, transit, walking, bicycling]).then((values) => {
+  Promise.all([transit, driving, bicycling, walking]).then((values) => {
     const results = values;
     let drivingDistance
     let transitDistance

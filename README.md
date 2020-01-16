@@ -10,7 +10,7 @@
 
 API hosted at
 ```
-http://project-greenprint-backend.herokuapp.com/
+https://project-greenprint-backend.herokuapp.com/
 ```
 
 ## Journey
