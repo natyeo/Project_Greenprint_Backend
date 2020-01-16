@@ -75,7 +75,7 @@ MONGO_ATLAS_KEY = 'YOUR_MONGOATLAS_USER_PASSWORD'
 GOOGLE_KEY_EMBED_MAPS="A_SEPARATE_GOOGLE_API_KEY_FOR_EMBEDDED_MAPS" *
 BRIGHTER_PLANET_KEY="YOUR_BRIGHTER_PLANET_API_KEY"
 ```
-*IMPORTANT: ensure that this key is restricted to only receive referrals from frontend app, as the key is included in the url for embedding maps.
+*IMPORTANT: ensure that this key is restricted to only receive referrals from the specific frontend app, as the key is included in the url for embedding maps.
 
 To run server locally, type ``` node server.js ```.
 

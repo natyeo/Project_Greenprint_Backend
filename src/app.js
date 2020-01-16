@@ -2,11 +2,13 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
-const { google_key, carbon_key } = require('../config')
+const { google_key, carbon_key, climateneutral_key } = require('../config')
 var googleMaps = require('@google/maps').createClient({
   key: google_key
 
 });
+const fetch = require('node-fetch');
+global.Headers = fetch.Headers;
 
 const db = require('../db')
 const recordRouter = require('../routes/record-router')
@@ -93,25 +95,29 @@ if(process.env.NODE_ENV === 'production') {
         mode: "walking",
         travel_time: "3 hours",
         distance: 8,
-        carbon: 0
+        carbon: 0, 
+        url: "www.google.com"
       },
       {
         mode: "bicycling",
-        travel_time: "1 hour",
-        distance: 8,
-        carbon: 0
+        travel_time: "NOT AVAILABLE",
+        distance: "NOT AVAILABLE",
+        carbon: "NOT AVAILABLE",
+        url: "NOT AVAILABLE"
       },
       {
         mode: "driving",
         travel_time: "20 minutes",
         distance: 10,
-        carbon: 2.30
+        carbon: 2.30,
+        url: "www.google.com"
       },
       {
         mode: "transit",
         travel_time: "10 minutes",
         distance: 2,
-        carbon: 0.5
+        carbon: 0.5,
+        url: "www.google.com"
       }
     ])
   });
@@ -129,6 +135,5 @@ if(process.env.NODE_ENV === 'production') {
 
   app.use('/travel', recordRouter)
   app.use('/user', userRouter)
-
 
   module.exports = app;
