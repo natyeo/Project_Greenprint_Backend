@@ -71,9 +71,11 @@ PORT=5678
 
 GOOGLE_KEY='YOUR_GOOGLE_API_KEY'
 CARBON_KEY='YOUR_TRIP_TO_CARBON_API_KEY'
-MONGO_ATLAS_KEY = 'YOUR_MONGOATLAST_USER_PASSWORD'
-GOOGLE_KEY_EMBED_MAPS="A_SEPARATE_GOOGLE_API_KEY_FOR_EMBEDDED_MAPS"
+MONGO_ATLAS_KEY = 'YOUR_MONGOATLAS_USER_PASSWORD'
+GOOGLE_KEY_EMBED_MAPS="A_SEPARATE_GOOGLE_API_KEY_FOR_EMBEDDED_MAPS" *
+BRIGHTER_PLANET_KEY="YOUR_BRIGHTER_PLANET_API_KEY"
 ```
+*IMPORTANT: ensure that this key is restricted to only receive referrals from the specific frontend app, as the key is included in the url for embedding maps.
 
 To run server locally, type ``` node server.js ```.
 
