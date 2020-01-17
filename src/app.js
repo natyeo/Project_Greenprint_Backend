@@ -51,8 +51,8 @@ app.post('/', (req, res) => {
     let transitDistance
 
     results.filter(function(item){
-      item.mode == 'driving' ? drivingDistance = item.distance.slice(0, -3) : drivingDistance;
-      item.mode == 'transit' ? transitDistance = item.distance.slice(0, -3) : transitDistance;
+      item.mode == 'driving' ? drivingDistance = item.distance.slice(0, -3).replace(/,/g,'') : drivingDistance;
+      item.mode == 'transit' ? transitDistance = item.distance.slice(0, -3).replace(/,/g,'') : transitDistance;
     })
 
     results.forEach(function(item, i){
