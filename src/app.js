@@ -51,13 +51,15 @@ app.post('/', (req, res) => {
     let transitDistance
 
     results.filter(function(item){
-      item.mode == 'driving' ? drivingDistance = item.distance.slice(0, -3) : drivingDistance;
-      item.mode == 'transit' ? transitDistance = item.distance.slice(0, -3) : transitDistance;
+      item.mode == 'driving' ? drivingDistance = item.distance.slice(0, -3).replace(/,/g,'') : drivingDistance;
+      item.mode == 'transit' ? transitDistance = item.distance.slice(0, -3).replace(/,/g,'') : transitDistance;
     })
 
     results.forEach(function(item, i){
       item.distance = item.distance.slice(0, -3)
     })
+
+    console.log(drivingDistance)
 
     const carUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${drivingDistance}&activityType=miles&country=def&mode=anyCar&appTkn=${carbon_key}`
     const transitUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${transitDistance}&activityType=miles&country=def&mode=transitRail&appTkn=${carbon_key}`
