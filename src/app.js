@@ -59,8 +59,6 @@ app.post('/', (req, res) => {
       item.distance = item.distance.slice(0, -3)
     })
 
-    console.log(drivingDistance)
-
     const carUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${drivingDistance}&activityType=miles&country=def&mode=anyCar&appTkn=${carbon_key}`
     const transitUrl = `https://api.triptocarbon.xyz/v1/footprint?activity=${transitDistance}&activityType=miles&country=def&mode=transitRail&appTkn=${carbon_key}`
 
