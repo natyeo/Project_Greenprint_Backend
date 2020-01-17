@@ -63,7 +63,7 @@ describe('post route requests', () => {
       "to": "Rome"
     })
     .then((res) => {
-      expect(res).to.include({ "distance": "NOT AVAILABLE" })
+      expect(res).to.include({ "distance": "not available" })
     })
     .catch((err) => {
       throw err;
