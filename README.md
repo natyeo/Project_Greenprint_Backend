@@ -13,6 +13,11 @@ API hosted at
 https://project-greenprint-backend.herokuapp.com/
 ```
 
+Can be used with the following [frontend app](https://github.com/natyeo/Project_Greenprint_Frontend):  
+```
+https://project-greenprint.herokuapp.com/
+```
+
 ## Journey
 
 **POST** ```/```
@@ -103,7 +108,8 @@ npm test
 ```
 Tests are run using the Mocha testing framework!
 
-### Team
+
+## Team
 
 <a href="https://github.com/elfiyang16" target="new"><img src="https://avatars3.githubusercontent.com/u/29664811?s=400&v=4" width="60" height="60" hspace="5" title="Elfi Yang"></a>
 <a href="https://github.com/jonesandy" target="new"><img src="https://avatars0.githubusercontent.com/u/26009223?s=400&v=4" width="60" height="60" hspace="5" title="Andy Jones"></a>
