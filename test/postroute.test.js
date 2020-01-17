@@ -53,4 +53,20 @@ describe('post route requests', () => {
       throw err;
     })
   })
+
+  it('should error if something is wrong', () => {
+    chai.request(app)
+    .post('/')
+    .type('form')
+    .send({
+      "from": "London",
+      "to": "Rome"
+    })
+    .then((res) => {
+      expect(res).to.include({ "distance": "not available" })
+    })
+    .catch((err) => {
+      throw err;
+    })
+  })
 });
