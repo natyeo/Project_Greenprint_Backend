@@ -45,8 +45,8 @@ API runs with the following technologies:
 
 API tested with the following frameworks:
 
-  * [Jest](https://jestjs.io/)
-  * [Supertest](https://github.com/visionmedia/supertest)
+  * [Mocha](https://mochajs.org/)
+  * [Chai](https://www.chaijs.com/)
 
 
 ### Setup
