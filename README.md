@@ -102,3 +102,12 @@ To run tests, navigate to root folder and run command
 npm test
 ```
 Tests are run using the Mocha testing framework!
+
+### Team
+
+<a href="https://github.com/elfiyang16" target="new"><img src="https://avatars3.githubusercontent.com/u/29664811?s=400&v=4" width="60" height="60" hspace="5" title="Elfi Yang"></a>
+<a href="https://github.com/jonesandy" target="new"><img src="https://avatars0.githubusercontent.com/u/26009223?s=400&v=4" width="60" height="60" hspace="5" title="Andy Jones"></a>
+<a href="https://github.com/SevenSecrets" target="new"><img src="https://avatars0.githubusercontent.com/u/53475555?s=400&v=4" width="60" height="60" hspace="5" title="Freddie Smith Hughes"></a>
+<a href="https://github.com/fahus" target="new"><img src="https://avatars0.githubusercontent.com/u/52044764?s=400&v=4" width="60" height="60" hspace="5" title="Faduma Hussein"></a>
+<a href="https://github.com/sarar0" target="new"><img src="https://avatars2.githubusercontent.com/u/45262110?s=400&v=4" width="60" height="60" hspace="5" title="Sara Rancati"></a>
+<a href="https://github.com/natyeo" target="new"><img src="https://avatars2.githubusercontent.com/u/49326857?s=400&v=4" width="60" height="60" hspace="5" title="Natalie Yeo"></a>
