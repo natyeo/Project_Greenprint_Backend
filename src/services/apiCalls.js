@@ -53,7 +53,6 @@ async function brighterPlanetApiCall(req) {
     })
     .then(data => data.json())
     .then((json) => {
-      console.log(json)
       resolve(json)
     })
   });
@@ -72,7 +71,6 @@ async function returnFinalResponse(results, carUrl, transitUrl, res) {
     ])
 
     results.filter(function(item){
-      console.log(dataTransit)
       item.mode == 'driving' && !dataCar.errorMessage ? item.carbon = dataCar.carbonFootprint : item.carbon;
       item.mode == 'transit' && !dataTransit.errorMessage ? item.carbon = dataTransit.carbonFootprint : item.carbon;
     })
