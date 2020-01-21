@@ -32,7 +32,7 @@ app.use(cors({
   }
 }));
 
-// app.options('*', cors())
+app.options('*', cors())
 
 app.use(logger('dev'));
 app.use(express.json());
