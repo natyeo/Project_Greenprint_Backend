@@ -18,7 +18,22 @@ const passport = require("passport");
 const userRouter = require('../routes/user-router')
 const Api = require('./services/apiCalls');
 
-app.use(cors({ origin: '*' }));
+var allowedOrigins = ['http://localhost:3000',
+                      'https://project-greenprint.herokuapp.com/'];
+
+app.use(cors({
+  origin: function(origin, callback){
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
+
+// app.options('*', cors())
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -36,8 +51,6 @@ if(process.env.NODE_ENV === 'production') {
     }
   })
 }
-
-app.options('*', cors())
 
 app.post('/', (req, res) => {
   const driving = Api.googleApiCall(req, 'driving')
