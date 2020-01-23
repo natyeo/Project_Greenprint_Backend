@@ -18,21 +18,21 @@ const passport = require("passport");
 const userRouter = require('../routes/user-router')
 const Api = require('./services/apiCalls');
 
-var allowedOrigins = ['http://localhost:3000',
-                      'https://project-greenprint.herokuapp.com/'];
-
-app.use(cors({
-  origin: function(origin, callback){
-    if(allowedOrigins.indexOf(origin) === -1){
-      var msg = 'The CORS policy for this site does not ' +
-                'allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  }
-}));
-
 app.options('*', cors())
+
+var whitelist = ['http://localhost:3000', 'https://project-greenprint.herokuapp.com/'];
+
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
+app.use(cors(corsOptions));
 
 app.use(logger('dev'));
 app.use(express.json());
